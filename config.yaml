@@ -1,0 +1,6 @@
+---
+# Path where your data is stored
+path_data: /tmp/searchengine/
+
+# Port to bind to for incoming HTTP requests
+port: 6767
