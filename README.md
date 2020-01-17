@@ -3,6 +3,7 @@
 ### Indexes Structure
 
 The root directory can be changed using `path_data` in config.yaml
+
 An index is defined by a directory. Inside, you have :
     * `n` files (or segments) which store your data relative to your index.
     * A `.meta` file where you will have the number of segments, the mapping of the index, the index's name
