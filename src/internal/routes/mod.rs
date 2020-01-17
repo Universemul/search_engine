@@ -16,10 +16,10 @@ pub fn index_route(server: &mut nickel::Nickel) -> () {
     });
 }
 
-pub fn startup(port: i16) -> () {
+pub fn startup(port: i16, path_data: String) -> () {
     let mut server = Nickel::new();
-    server.add_route(Method::Get, "/", middleware! { |request|
-        base::home(request)
+    server.get("/", middleware! { |request, mut response|
+        base::home(request, path_data.clone())
     });
     index_route(&mut server);
 
