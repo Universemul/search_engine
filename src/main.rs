@@ -9,12 +9,10 @@ pub mod fs;
 
 fn main() {
     // Loading config
-    let conf = config::parse().unwrap(); //check error
+    let conf = config::parse().unwrap();
 
-    // Loading FS
-    
     // Load the cache
     
     // Starting the api
-    internal::routes::startup(conf.port, conf.path_data);
+    internal::startup(conf.port, &conf.path_data);
 }

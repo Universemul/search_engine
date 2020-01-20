@@ -1,11 +1,26 @@
 pub mod routes;
 pub mod models;
 
+use nickel::{Nickel, HttpRouter};
+
 use crate::internal;
 use crate::fs::provider::FsProvider;
 use crate::fs::lz4_provider::LZ4Provider;
 use std::collections::HashMap;
 use std::path::Path;
+
+pub fn startup(port: i16, path_data: &str) -> () {
+    let mut server = Nickel::new();
+    server.get("/", middleware! { |request, mut response|
+        routes::base::home(request, path_data)
+    });
+    
+    routes::index_route(&mut server, path_data);
+
+    let addr = format!("127.0.0.1:{}", port);
+    println!("Start Rest Api successfully");
+    server.listen(addr).unwrap();
+}
 
 #[allow(dead_code)]
 fn write_metafile(index: &str, segment_count: i16, path_data: String) {
