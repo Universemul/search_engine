@@ -9,8 +9,7 @@ pub mod fs;
 
 fn main() {
     // Loading config
-    let conf = config::parse().unwrap();
-
+    let conf: config::Config = config::parse_yaml_file("config.yaml").unwrap();
     // Load the cache
     
     // Starting the api

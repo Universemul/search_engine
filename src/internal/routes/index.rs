@@ -7,7 +7,7 @@ use crate::fs::provider::FsProvider;
 
 pub fn root(request: &mut nickel::Request, path_data: &str) -> String {
     let index_name = request.param("name").unwrap();
-    let path = format!("{}/{}", path_data.clone(), index_name);
+    let path = format!("{}/{}", path_data, index_name);
     let mut _dir = fs::read_dir(path).unwrap();
     let provider = LZ4Provider{};
     let meta_file = _dir.find(|x| x.as_ref().unwrap().path().file_name().unwrap() == ".meta").unwrap();

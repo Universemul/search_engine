@@ -5,7 +5,7 @@ use crate::internal::models::Index;
 use crate::fs::lz4_provider::LZ4Provider;
 use crate::fs::provider::FsProvider;
 
-pub fn home(_request: &mut nickel::Request, path: &str) -> String {
+pub fn home(_request: &mut nickel::Request, path: & str) -> String {
     let paths = fs::read_dir(path).unwrap();
     let provider = LZ4Provider{};
     let mut indexes: Vec<Index> = Vec::with_capacity(10);

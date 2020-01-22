@@ -11,10 +11,10 @@ use std::path::Path;
 
 pub fn startup(port: i16, path_data: &str) -> () {
     let mut server = Nickel::new();
-    server.get("/", middleware! { |request, mut response|
-        routes::base::home(request, path_data)
+    let p = path_data.to_string();
+    server.get("/", middleware! {  |request, mut response|
+        routes::base::home(request, &p)
     });
-    
     routes::index_route(&mut server, path_data);
 
     let addr = format!("127.0.0.1:{}", port);

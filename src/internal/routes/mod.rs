@@ -2,16 +2,16 @@ pub mod base;
 pub mod index;
 
 use nickel::{Nickel, HttpRouter};
-use nickel::hyper::method::Method;
 
 pub fn index_route(server: &mut Nickel, path_data: &str) -> () {
-    server.add_route(Method::Get, "/index/:name", middleware! { |request|
-        index::root(request, path_data)
+    let p = path_data.to_string();
+    server.get("/index/:name", middleware! { |request|
+        index::root(request, &p)
     });
-    server.add_route(Method::Get, "/index/:name/count", middleware! { |request|
+    server.get("/index/:name/count", middleware! { |request|
         index::count(request)
     });
-    server.add_route(Method::Get, "/index/:name/search", middleware! { |request|
+    server.get("/index/:name/search", middleware! { |request|
         index::search(request)
     });
 }
