@@ -5,8 +5,7 @@ use crate::internal::models::Index;
 use crate::fs::lz4_provider::LZ4Provider;
 use crate::fs::provider::FsProvider;
 
-pub fn root(request: &mut nickel::Request, path_data: &str) -> String {
-    let index_name = request.param("name").unwrap();
+pub fn root(index_name: String, path_data: &str) -> String {
     let path = format!("{}/{}", path_data, index_name);
     let mut _dir = fs::read_dir(path).unwrap();
     let provider = LZ4Provider{};
@@ -17,15 +16,15 @@ pub fn root(request: &mut nickel::Request, path_data: &str) -> String {
     provider.decompress(Path::new(&m_path), &mut content).unwrap();
     let mut data_index: Index = serde_yaml::from_str(&content).unwrap();
     data_index.size = file_size as f64;
-    "".to_string()
+    "INDEX IS OK".to_string()
 }
 
-pub fn count(request: &mut nickel::Request) -> String {
+pub fn count(_index_name: String) -> String {
     //TODO : Count the number of document inside an index
-    format!("COUNT {}", request.param("name").unwrap().to_string())
+    format!("COUNT {}", "OK")
 }
 
-pub fn search(request: &mut nickel::Request) -> String {
+pub fn search(_index_name: String) -> String {
     //TODO : Search document in index
-    format!("SEARCH {}", request.param("name").unwrap().to_string())
+    format!("SEARCH {}", "OK")
 }

@@ -1,32 +1,35 @@
 pub mod routes;
 pub mod models;
 
-use nickel::{Nickel, HttpRouter};
-
 use crate::internal;
+use crate::warp::Filter;
 use crate::fs::provider::FsProvider;
 use crate::fs::lz4_provider::LZ4Provider;
 use std::collections::HashMap;
 use std::path::Path;
+use std::fs::File;
 
-pub fn startup(port: i16, path_data: &str) -> () {
-    let mut server = Nickel::new();
-    let p = path_data.to_string();
-    server.get("/", middleware! {  |request, mut response|
-        routes::base::home(request, &p)
+pub async fn startup(port: u16, path_data: &str) -> () {
+    let _p = path_data.to_string();
+    let index = warp::path::end().map(move || {
+        routes::base::home(&_p)
     });
-    routes::index_route(&mut server, path_data);
-
-    let addr = format!("127.0.0.1:{}", port);
-    println!("Start Rest Api successfully");
-    server.listen(addr).unwrap();
+    let index_route = routes::index_route(path_data);
+    let routes = warp::get().and(index.or(index_route));
+    println!("{}", format!("Booting Rest API : {}:{}", "127.0.0.1", port));
+    warp::serve(routes).run(([127, 0, 0, 1], port)).await
 }
 
 #[allow(dead_code)]
-fn write_metafile(index: &str, segment_count: i16, path_data: String) {
+pub fn write_metafile(index_name: &str, segment_count: i16, path_data: String) {
     let p = LZ4Provider{};
     let m: HashMap<String, String> = HashMap::new();
-    let index = internal::models::Index {name: index.to_string(), segments_count: segment_count, mapping: m, size: 0.0};
-    let path = format!("{}/{}/.meta", path_data, index);
-    p.compress(&serde_yaml::to_string(&index).unwrap(), Path::new(&path)).unwrap();
+    let index = internal::models::Index {name: index_name.to_string(), segments_count: segment_count, mapping: m, size: 0.0, is_ok: true};
+    let filepath = format!("{}{}/.meta", path_data, index_name);
+    let path = Path::new(&filepath);
+    if !Path::new(path).exists() {
+        println!("{:?} created", path);
+        File::create(path).unwrap();
+    }
+    p.compress(&serde_yaml::to_string(&index).unwrap(), path).unwrap();
 }

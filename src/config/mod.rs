@@ -7,10 +7,10 @@ use serde::de;
 pub struct Config {
     pub path_data: String,
     #[serde(default = "default_port")]
-    pub port: i16
+    pub port: u16
 }
 
-fn default_port() -> i16 {
+fn default_port() -> u16 {
     6767
 }
 

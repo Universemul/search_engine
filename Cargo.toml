@@ -7,7 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nickel = "0.11.0"
+warp = "0.2.1 "
+tokio = { version = "0.2", features = ["macros"] }
 lz4 = "1.23.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8"

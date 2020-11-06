@@ -1,17 +1,12 @@
 pub mod base;
 pub mod index;
 
-use nickel::{Nickel, HttpRouter};
+use crate::warp::Filter;
 
-pub fn index_route(server: &mut Nickel, path_data: &str) -> () {
+pub fn index_route(path_data: &str) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     let p = path_data.to_string();
-    server.get("/index/:name", middleware! { |request|
-        index::root(request, &p)
-    });
-    server.get("/index/:name/count", middleware! { |request|
-        index::count(request)
-    });
-    server.get("/index/:name/search", middleware! { |request|
-        index::search(request)
-    });
-}
+    let count = warp::path!("index" / String / "count").map(move |_index_name: String| index::count(_index_name));
+    let search = warp::path!("index" / String / "search").map(move |_index_name: String| index::search(_index_name));
+    let index = warp::path("index").and(warp::path::param::<String>()).map(move |name: String| index::root(name, &p));
+    count.or(index.or(search))
+} 

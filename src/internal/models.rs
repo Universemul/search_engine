@@ -6,13 +6,21 @@ use serde::{Serialize, Deserialize};
 pub struct Index {
     pub name: String,
     #[serde(default = "default_size")]
+    #[serde(skip_serializing, skip_deserializing)]
     pub size: f64,
+    #[serde(default = "default_is_ok")]
+    #[serde(skip_serializing, skip_deserializing)]
+    pub is_ok: bool,
     pub segments_count: i16,
     pub mapping: HashMap<String, String>
 }
 
 fn default_size() -> f64 {
     0.0
+}
+
+fn default_is_ok() -> bool {
+    true
 }
 
 impl fmt::Display for Index {
